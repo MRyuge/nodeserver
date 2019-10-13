@@ -1,3 +1,5 @@
+FROM node:12.9.1-buster-slim
+
 WORKDIR /myapp
 
 RUN apt-get update && apt-get -y upgrade && apt-get -y dist-upgrade && apt-get install -y alien libaio1
