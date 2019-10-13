@@ -1,16 +1,23 @@
-FROM node:12.9.1-buster-slim
+FROM oraclelinux:7-slim
+
+ADD oracle-instantclient*.rpm /tmp/
+
+RUN  yum -y install /tmp/oracle-instantclient*.rpm && \
+     rm -rf /var/cache/yum && \
+     rm -f /tmp/oracle-instantclient*.rpm && \
+     echo /usr/lib/oracle/12.2/client64/lib > /etc/ld.so.conf.d/oracle-instantclient12.2.conf && \
+     ldconfig
+
+ENV PATH=$PATH:/usr/lib/oracle/12.2/client64/bin
+
+
+FROM node:10
 
 WORKDIR /myapp
 
-RUN apt-get update && apt-get -y upgrade && apt-get -y dist-upgrade && apt-get install -y alien libaio1
-RUN wget http://yum.oracle.com/repo/OracleLinux/OL7/oracle/instantclient/x86_64/getPackage/oracle-instantclient19.3-basiclite-19.3.0.0.0-1.x86_64.rpm
-RUN alien -i --scripts oracle-instantclient*.rpm
-RUN rm -f oracle-instantclient19.3*.rpm && apt-get -y autoremove && apt-get -y clean
 ADD package.json /myapp/
 ADD server.js /myapp/
 RUN npm install
-
-CMD exec node server.js
 
 EXPOSE 8080
 CMD [ "node", "server.js" ]
