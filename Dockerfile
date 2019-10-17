@@ -1,6 +1,6 @@
 FROM oraclelinux:7-slim
 
-ADD oracle-instantclient*.rpm /tmp/
+#ADD oracle-instantclient*.rpm /tmp/
 
 RUN yum update -y && \
   yum install -y oracle-release-el7 && \
@@ -16,10 +16,10 @@ RUN yum update -y && \
 
 FROM node:10
 
-WORKDIR /myapp
+#WORKDIR /myapp
 
-ADD package.json /myapp/
-ADD server.js /myapp/
+ADD package.json 
+ADD server.js 
 RUN npm install
 
 EXPOSE 8080
